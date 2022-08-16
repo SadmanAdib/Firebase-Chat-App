@@ -14,6 +14,7 @@
 		326414DD28AB5783007E39FA /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 326414DC28AB5783007E39FA /* FirebaseAuth */; };
 		326414DF28AB5783007E39FA /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 326414DE28AB5783007E39FA /* FirebaseStorage */; };
 		326414E128AB5BD7007E39FA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 326414E028AB5BD7007E39FA /* GoogleService-Info.plist */; };
+		326414E328ABA6CA007E39FA /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326414E228ABA6CA007E39FA /* ImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		326414D128AB4B94007E39FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		326414D428AB4B94007E39FA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		326414E028AB5BD7007E39FA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		326414E228ABA6CA007E39FA /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				326414CF28AB4B92007E39FA /* LoginView.swift */,
 				326414D128AB4B94007E39FA /* Assets.xcassets */,
 				326414D328AB4B94007E39FA /* Preview Content */,
+				326414E228ABA6CA007E39FA /* ImagePicker.swift */,
 			);
 			path = "Firebase Chat App";
 			sourceTree = "<group>";
@@ -152,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				326414E328ABA6CA007E39FA /* ImagePicker.swift in Sources */,
 				326414D028AB4B92007E39FA /* LoginView.swift in Sources */,
 				326414CE28AB4B92007E39FA /* Firebase_Chat_AppApp.swift in Sources */,
 			);
