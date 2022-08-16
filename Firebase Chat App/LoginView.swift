@@ -6,12 +6,30 @@
 //
 
 import SwiftUI
+import Firebase
+
+class FirebaseManager: NSObject {
+
+    let auth: Auth
+
+    static let shared = FirebaseManager()
+
+    override init() {
+        FirebaseApp.configure()
+
+        self.auth = Auth.auth()
+
+        super.init()
+    }
+
+}
 
 struct LoginView: View {
 
     @State var isLoginMode = false
     @State var email = ""
     @State var password = ""
+    @State var loginStatusMessage = ""
 
     var body: some View {
         NavigationView {
@@ -61,6 +79,9 @@ struct LoginView: View {
                         .cornerRadius(10)
 
                     }
+                    
+                    Text(loginStatusMessage)
+                    
                 }
                 .padding()
 
@@ -73,13 +94,41 @@ struct LoginView: View {
 
     private func handleAction() {
         if isLoginMode {
-            print("Logging in")
+            loginUser()
         } else {
-            print("Creating Account")
+            createNewAccount()
         }
     }
-}
+    
+    private func loginUser() {
+            FirebaseManager.shared.auth.signIn(withEmail: email, password: password) { result, err in
+                if let err = err {
+                    print("Failed to login user:", err)
+                    self.loginStatusMessage = "Failed to login user: \(err)"
+                    return
+                }
 
+                print("Successfully logged in as user: \(result?.user.uid ?? "")")
+
+                self.loginStatusMessage = "Successfully logged in as user: \(result?.user.uid ?? "")"
+            }
+        }
+    
+
+        private func createNewAccount() {
+            FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
+                if let err = err {
+                    print("Failed to create user:", err)
+                    self.loginStatusMessage = "Failed to create user: \(err)"
+                    return
+                }
+
+                print("Successfully created user: \(result?.user.uid ?? "")")
+
+                self.loginStatusMessage = "Successfully created user: \(result?.user.uid ?? "")"
+            }
+        }
+}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
