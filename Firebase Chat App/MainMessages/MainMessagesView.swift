@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 
 struct ChatUser {
     let uid, email, profileImageUrl: String
@@ -57,16 +56,20 @@ struct MainMessagesView: View {
         private var customNavBar: some View {
             HStack(spacing: 16) {
 
-                WebImage(url: URL(string: vm.chatUser?.profileImageUrl ?? ""))
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 50, height: 50)
-                    .clipped()
-                    .cornerRadius(50)
-                    .overlay(RoundedRectangle(cornerRadius: 44)
-                                .stroke(Color(.label), lineWidth: 1)
-                    )
-                    .shadow(radius: 5)
+                AsyncImage(url: URL(string: vm.chatUser?.profileImageUrl ?? "")) { returnedImage in
+                    returnedImage
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 50, height: 50)
+                        .clipped()
+                        .cornerRadius(50)
+                        .overlay(RoundedRectangle(cornerRadius: 44)
+                            .stroke(Color(.label), lineWidth: 1)
+                        )
+                        .shadow(radius: 5)
+                } placeholder: {
+                    ProgressView()
+                }
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(vm.chatUser?.email.replacingOccurrences(of: "@gmail.com", with: "") ?? "")

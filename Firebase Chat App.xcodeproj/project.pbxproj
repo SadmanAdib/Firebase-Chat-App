@@ -17,7 +17,6 @@
 		32D2CE0028ACAB660049D335 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 32D2CDFF28ACAB660049D335 /* FirebaseFirestore */; };
 		32D2CE0228ACAB660049D335 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 32D2CE0128ACAB660049D335 /* FirebaseStorage */; };
 		32D2CE0528ACCAC80049D335 /* MainMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D2CE0428ACCAC80049D335 /* MainMessagesView.swift */; };
-		32D2CE0828ACEC330049D335 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 32D2CE0728ACEC330049D335 /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,7 +35,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32D2CE0828ACEC330049D335 /* SDWebImageSwiftUI in Frameworks */,
 				32D2CDFE28ACAB660049D335 /* FirebaseAuth in Frameworks */,
 				32D2CE0028ACAB660049D335 /* FirebaseFirestore in Frameworks */,
 				32D2CE0228ACAB660049D335 /* FirebaseStorage in Frameworks */,
@@ -112,7 +110,6 @@
 				32D2CDFD28ACAB660049D335 /* FirebaseAuth */,
 				32D2CDFF28ACAB660049D335 /* FirebaseFirestore */,
 				32D2CE0128ACAB660049D335 /* FirebaseStorage */,
-				32D2CE0728ACEC330049D335 /* SDWebImageSwiftUI */,
 			);
 			productName = "Firebase Chat App";
 			productReference = 326414CA28AB4B92007E39FA /* Firebase Chat App.app */;
@@ -144,7 +141,6 @@
 			mainGroup = 326414C128AB4B92007E39FA;
 			packageReferences = (
 				32D2CDFC28ACAB660049D335 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				32D2CE0628ACEC330049D335 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 326414CB28AB4B92007E39FA /* Products */;
 			projectDirPath = "";
@@ -387,14 +383,6 @@
 				minimumVersion = 9.0.0;
 			};
 		};
-		32D2CE0628ACEC330049D335 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -412,11 +400,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 32D2CDFC28ACAB660049D335 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
-		};
-		32D2CE0728ACEC330049D335 /* SDWebImageSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 32D2CE0628ACEC330049D335 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
-			productName = SDWebImageSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
