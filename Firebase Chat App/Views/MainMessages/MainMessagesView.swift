@@ -11,6 +11,7 @@ struct MainMessagesView: View {
     
     @State var shouldShowLogOutOptions = false
     @StateObject var vm = MainMessagesViewModel()
+    @State private var showNewMessageView = false
 
         var body: some View {
             NavigationView {
@@ -27,7 +28,7 @@ struct MainMessagesView: View {
 
         private var newMessageButton: some View {
             Button {
-
+                showNewMessageView.toggle()
             } label: {
                 HStack {
                     Spacer()
@@ -41,6 +42,9 @@ struct MainMessagesView: View {
                     .cornerRadius(32)
                     .padding(.horizontal)
                     .shadow(radius: 15)
+            }
+            .fullScreenCover(isPresented: $showNewMessageView) {
+                NewMessageView()
             }
         }
 }
