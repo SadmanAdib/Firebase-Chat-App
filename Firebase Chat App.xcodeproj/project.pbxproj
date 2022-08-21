@@ -17,6 +17,7 @@
 		32D2CE0028ACAB660049D335 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 32D2CDFF28ACAB660049D335 /* FirebaseFirestore */; };
 		32D2CE0228ACAB660049D335 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 32D2CE0128ACAB660049D335 /* FirebaseStorage */; };
 		32D2CE0528ACCAC80049D335 /* MainMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D2CE0428ACCAC80049D335 /* MainMessagesView.swift */; };
+		32D2CE0B28B1FE190049D335 /* ChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D2CE0A28B1FE190049D335 /* ChatUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		326414E028AB5BD7007E39FA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		326414E228ABA6CA007E39FA /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		32D2CE0428ACCAC80049D335 /* MainMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMessagesView.swift; sourceTree = "<group>"; };
+		32D2CE0A28B1FE190049D335 /* ChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 		326414CC28AB4B92007E39FA /* Firebase Chat App */ = {
 			isa = PBXGroup;
 			children = (
+				32D2CE0928B1FE010049D335 /* Model */,
 				32D2CE0328ACCAA70049D335 /* MainMessages */,
 				326414CD28AB4B92007E39FA /* Firebase_Chat_AppApp.swift */,
 				326414E028AB5BD7007E39FA /* GoogleService-Info.plist */,
@@ -88,6 +91,14 @@
 				32D2CE0428ACCAC80049D335 /* MainMessagesView.swift */,
 			);
 			path = MainMessages;
+			sourceTree = "<group>";
+		};
+		32D2CE0928B1FE010049D335 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				32D2CE0A28B1FE190049D335 /* ChatUser.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,6 +184,7 @@
 				32D2CE0528ACCAC80049D335 /* MainMessagesView.swift in Sources */,
 				326414D028AB4B92007E39FA /* LoginView.swift in Sources */,
 				326414CE28AB4B92007E39FA /* Firebase_Chat_AppApp.swift in Sources */,
+				32D2CE0B28B1FE190049D335 /* ChatUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

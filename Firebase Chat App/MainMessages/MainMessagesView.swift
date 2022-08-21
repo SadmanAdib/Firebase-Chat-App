@@ -7,20 +7,21 @@
 
 import SwiftUI
 
-struct ChatUser {
-    let uid, email, profileImageUrl: String
-}
-
 class MainMessagesViewModel: ObservableObject {
 
-    @Published var errorMessage = ""
+    @Published private var errorMessage = ""
     @Published var chatUser: ChatUser?
+    @Published var isUserCurrentlyLoggedOut = false
 
     init() {
         fetchCurrentUser()
+        
+        DispatchQueue.main.async {
+            self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
+        }
     }
 
-    private func fetchCurrentUser() {
+     func fetchCurrentUser() {
 
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             self.errorMessage = "Could not find firebase uid"
@@ -39,11 +40,14 @@ class MainMessagesViewModel: ObservableObject {
                 return
 
             }
-            let uid = data["uid"] as? String ?? ""
-            let email = data["email"] as? String ?? ""
-            let profileImageUrl = data["profileImageUrl"] as? String ?? ""
-            self.chatUser = ChatUser(uid: uid, email: email, profileImageUrl: profileImageUrl)
+            
+            self.chatUser = .init(data: data)
         }
+    }
+    
+    func handleSignOut() {
+        isUserCurrentlyLoggedOut.toggle()
+        try? FirebaseManager.shared.auth.signOut()
     }
 
 }
@@ -100,9 +104,16 @@ struct MainMessagesView: View {
                 .init(title: Text("Settings"), message: Text("What do you want to do?"), buttons: [
                     .destructive(Text("Sign Out"), action: {
                         print("handle sign out")
+                        vm.handleSignOut()
                     }),
-                        .cancel()
+                    .cancel()
                 ])
+            }
+            .fullScreenCover(isPresented: $vm.isUserCurrentlyLoggedOut) {
+                LoginView(didCompleteLoginProcess: {
+                    vm.isUserCurrentlyLoggedOut = false
+                    vm.fetchCurrentUser()
+                })
             }
         }
 

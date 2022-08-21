@@ -38,6 +38,8 @@ struct LoginView: View {
     @State var showImagePicker = false
     @State var image: UIImage?
     
+    let didCompleteLoginProcess: () -> ()
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -110,7 +112,7 @@ struct LoginView: View {
             .background(Color(.init(white: 0, alpha: 0.05))
                 .ignoresSafeArea())
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        //.navigationViewStyle(StackNavigationViewStyle())
         .fullScreenCover(isPresented: $showImagePicker, onDismiss: nil) {
                     ImagePicker(image: $image)
                         .ignoresSafeArea()
@@ -136,11 +138,20 @@ struct LoginView: View {
             print("Successfully logged in as user: \(result?.user.uid ?? "")")
             
             loginStatusMessage = "Successfully logged in as user: \(result?.user.uid ?? "")"
+            
+            didCompleteLoginProcess()
+            
         }
     }
     
     
     private func createNewAccount() {
+        
+        if image == nil {
+            loginStatusMessage = "Please select an image!"
+            return
+        }
+        
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
             if let err = err {
                 print("Failed to create user:", err)
@@ -192,12 +203,14 @@ struct LoginView: View {
             }
             
             print("Stored User Info Successfully!")
+            
+            didCompleteLoginProcess()
         }
     }
     
 }
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
+        LoginView(didCompleteLoginProcess: {})
     }
 }
