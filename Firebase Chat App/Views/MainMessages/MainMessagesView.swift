@@ -60,20 +60,6 @@ struct MainMessagesView: View {
         }
 }
 
-struct ChatLogView: View {
-    var chatUser: ChatUser?
-    
-    var body: some View {
-        ScrollView {
-            ForEach(0..<10) { message in
-                Text("Mock Message")
-            }
-        }
-        .navigationTitle(chatUser?.email ?? "")
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
 struct CustomNavBar: View {
     
     @ObservedObject var vm: MainMessagesViewModel

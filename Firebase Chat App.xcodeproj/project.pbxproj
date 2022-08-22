@@ -22,6 +22,7 @@
 		32D2CE1028B208F10049D335 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D2CE0F28B208F10049D335 /* FirebaseManager.swift */; };
 		32D2CE1728B22EDE0049D335 /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D2CE1628B22EDE0049D335 /* NewMessageView.swift */; };
 		32D2CE1928B22F1E0049D335 /* NewMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D2CE1828B22F1E0049D335 /* NewMessageViewModel.swift */; };
+		32D2CE1C28B38D000049D335 /* ChatLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D2CE1B28B38D000049D335 /* ChatLogView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		32D2CE0F28B208F10049D335 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		32D2CE1628B22EDE0049D335 /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
 		32D2CE1828B22F1E0049D335 /* NewMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageViewModel.swift; sourceTree = "<group>"; };
+		32D2CE1B28B38D000049D335 /* ChatLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 		32D2CE1128B20B450049D335 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				32D2CE1A28B38CED0049D335 /* ChatLog */,
 				32D2CE1528B22EC70049D335 /* NewMessage */,
 				32D2CE1228B20B680049D335 /* Login */,
 				32D2CE0328ACCAA70049D335 /* MainMessages */,
@@ -143,6 +146,14 @@
 				32D2CE1828B22F1E0049D335 /* NewMessageViewModel.swift */,
 			);
 			path = NewMessage;
+			sourceTree = "<group>";
+		};
+		32D2CE1A28B38CED0049D335 /* ChatLog */ = {
+			isa = PBXGroup;
+			children = (
+				32D2CE1B28B38D000049D335 /* ChatLogView.swift */,
+			);
+			path = ChatLog;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -225,6 +236,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				326414E328ABA6CA007E39FA /* ImagePicker.swift in Sources */,
+				32D2CE1C28B38D000049D335 /* ChatLogView.swift in Sources */,
 				32D2CE1728B22EDE0049D335 /* NewMessageView.swift in Sources */,
 				32D2CE0528ACCAC80049D335 /* MainMessagesView.swift in Sources */,
 				32D2CE1928B22F1E0049D335 /* NewMessageViewModel.swift in Sources */,
