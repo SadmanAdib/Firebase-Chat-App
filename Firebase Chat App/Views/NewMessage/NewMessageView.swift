@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct NewMessageView: View {
+    
     @Environment(\.presentationMode) var presentationMode
-
-        @StateObject var vm = NewMessageViewModel()
+    
+    @StateObject var vm = NewMessageViewModel()
+    
+    let selectedChatUser: (ChatUser) -> ()
 
         var body: some View {
             NavigationView {
@@ -19,7 +22,8 @@ struct NewMessageView: View {
 
                     ForEach(vm.users) { user in
                         Button {
-                            presentationMode.wrappedValue.dismiss()
+                            //presentationMode.wrappedValue.dismiss()
+                            selectedChatUser(user)
                         } label: {
                             HStack(spacing: 16) {
                                 AsyncImage(url: URL(string: user.profileImageUrl)) { returnedImage in
@@ -57,8 +61,8 @@ struct NewMessageView: View {
         }
 }
 
-struct NewMessageView_Previews: PreviewProvider {
-    static var previews: some View {
-        NewMessageView()
-    }
-}
+//struct NewMessageView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NewMessageView()
+//    }
+//}

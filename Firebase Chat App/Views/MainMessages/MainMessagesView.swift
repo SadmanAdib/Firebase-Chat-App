@@ -12,6 +12,8 @@ struct MainMessagesView: View {
     @State var shouldShowLogOutOptions = false
     @StateObject var vm = MainMessagesViewModel()
     @State private var showNewMessageView = false
+    @State private var showChatLogView = false
+    @State private var chatUser: ChatUser?
 
         var body: some View {
             NavigationView {
@@ -19,6 +21,10 @@ struct MainMessagesView: View {
                 VStack {
                     CustomNavBar(vm: vm, shouldShowLogOutOptions: $shouldShowLogOutOptions)
                     MessagesView()
+                    
+                    NavigationLink("", isActive: $showChatLogView) {
+                        ChatLogView(chatUser: chatUser)
+                    }
                 }
                 .overlay(
                     newMessageButton, alignment: .bottom)
@@ -44,9 +50,28 @@ struct MainMessagesView: View {
                     .shadow(radius: 15)
             }
             .fullScreenCover(isPresented: $showNewMessageView) {
-                NewMessageView()
+                NewMessageView(selectedChatUser: { user in
+                    //print(user.email)
+                    chatUser = user
+                    showNewMessageView.toggle()
+                    showChatLogView.toggle()
+                })
             }
         }
+}
+
+struct ChatLogView: View {
+    var chatUser: ChatUser?
+    
+    var body: some View {
+        ScrollView {
+            ForEach(0..<10) { message in
+                Text("Mock Message")
+            }
+        }
+        .navigationTitle(chatUser?.email ?? "")
+        .navigationBarTitleDisplayMode(.inline)
+    }
 }
 
 struct CustomNavBar: View {
