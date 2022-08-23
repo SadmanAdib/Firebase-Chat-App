@@ -6,45 +6,97 @@
 //
 
 import SwiftUI
+import Firebase
+
+class ChatLogViewModel: ObservableObject {
+    @Published var chatText = ""
+    private var chatUser: ChatUser?
+    
+    init(chatUser: ChatUser?) {
+        self.chatUser = chatUser
+    }
+    
+    func handleSend() {
+        //print(chatText)
+        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let toId = chatUser?.uid else {return}
+        
+        let senderMessageDocument = FirebaseManager.shared.firestore.collection("messages")
+            .document(fromId)
+            .collection(toId)
+            .document()
+        
+        let messageData = ["fromId": fromId, "toId": toId, "text": chatText, "timestamp": Timestamp()] as [String : Any]
+        
+        senderMessageDocument.setData(messageData) { err in
+            if let err = err {
+                print(err)
+                return
+            }
+            
+            print("Successfully saved message from sender end")
+            self.chatText = ""
+        }
+        
+        let recipientMessageDocument = FirebaseManager.shared.firestore.collection("messages")
+            .document(toId)
+            .collection(fromId)
+            .document()
+        
+        recipientMessageDocument.setData(messageData) { err in
+            if let err = err {
+                print(err)
+                return
+            }
+            
+            print("Successfully saved message from reciever end")
+            
+        }
+        
+                
+    }
+    
+}
 
 struct ChatLogView: View {
     
-    var chatUser: ChatUser?
+    @StateObject var vm: ChatLogViewModel
     
-    @State var chatText = ""
+    init(chatUser: ChatUser?) {
+        self.chatUser = chatUser
+        self._vm = StateObject(wrappedValue: ChatLogViewModel(chatUser: chatUser))
+        //self.vm = .init(chatUser: chatUser)
+    }
+    
+    var chatUser: ChatUser?
     
     var body: some View {
         ZStack {
             ChatMessagesView()
             VStack(spacing: 0) {
                 Spacer()
-                ChatBottomBar(chatText: $chatText)
+                ChatBottomBar
                     .background(Color.white.ignoresSafeArea())
             }
         }
         .navigationTitle(chatUser?.email ?? "")
         .navigationBarTitleDisplayMode(.inline)
     }
-}
-
-private struct ChatBottomBar: View {
     
-    @Binding var chatText: String
-    
-    var body: some View {
+    private var ChatBottomBar: some View {
         HStack(spacing: 16) {
             Image(systemName: "photo.on.rectangle")
                 .font(.system(size: 24))
                 .foregroundColor(Color(.darkGray))
             ZStack {
                 DescriptionPlaceholder()
-                TextEditor(text: $chatText)
-                    .opacity(chatText.isEmpty ? 0.5 : 1)
+                TextEditor(text: $vm.chatText)
+                    .opacity(vm.chatText.isEmpty ? 0.5 : 1)
             }
             .frame(height: 40)
             
             Button {
-                
+                vm.handleSend()
             } label: {
                 Text("Send")
                     .foregroundColor(.white)
@@ -98,10 +150,10 @@ private struct DescriptionPlaceholder: View {
     }
 }
 
-struct ChatLogView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView{
-            ChatLogView()
-        }
-    }
-}
+//struct ChatLogView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView{
+//            ChatLogView()
+//        }
+//    }
+//}
