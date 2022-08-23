@@ -8,12 +8,52 @@
 import SwiftUI
 import Firebase
 
+struct ChatMessage: Identifiable {
+    var id: String {documentId}
+    
+    let fromId, toId, text: String
+    
+    let documentId: String
+    
+    init(data: [String:Any], documentId: String){
+        self.fromId = data["fromId"] as? String ?? ""
+        self.toId = data["toId"] as? String ?? ""
+        self.text = data["text"] as? String ?? ""
+        self.documentId = documentId
+    }
+}
+
 class ChatLogViewModel: ObservableObject {
     @Published var chatText = ""
     private var chatUser: ChatUser?
+    @Published var chatMessages: [ChatMessage] = []
     
     init(chatUser: ChatUser?) {
         self.chatUser = chatUser
+        
+        fetchMessages()
+    }
+    
+    private func fetchMessages() {
+        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let toId = chatUser?.uid else {return}
+        
+        FirebaseManager.shared.firestore.collection("messages").document(fromId).collection(toId).order(by: "timestamp")
+            .addSnapshotListener { snapshot, err in
+                if let err = err {
+                    print(err)
+                    return
+                }
+                
+                snapshot?.documentChanges.forEach{ change in
+                    if change.type == .added {
+                        let data = change.document.data()
+//                        let chatMessage = ChatMessage(fromId: data["fromId"] as! String, toId: data["toId"] as! String, text: data["text"] as! String)
+                        let chatMessage = ChatMessage(data: data, documentId: change.document.documentID)
+                        self.chatMessages.append(chatMessage)
+                    }
+                }
+            }
     }
     
     func handleSend() {
@@ -50,12 +90,8 @@ class ChatLogViewModel: ObservableObject {
             }
             
             print("Successfully saved message from reciever end")
-            
         }
-        
-                
     }
-    
 }
 
 struct ChatLogView: View {
@@ -72,10 +108,10 @@ struct ChatLogView: View {
     
     var body: some View {
         ZStack {
-            ChatMessagesView()
+            chatMessagesView
             VStack(spacing: 0) {
                 Spacer()
-                ChatBottomBar
+                chatBottomBar
                     .background(Color.white.ignoresSafeArea())
             }
         }
@@ -83,7 +119,7 @@ struct ChatLogView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
     
-    private var ChatBottomBar: some View {
+    private var chatBottomBar: some View {
         HStack(spacing: 16) {
             Image(systemName: "photo.on.rectangle")
                 .font(.system(size: 24))
@@ -109,22 +145,35 @@ struct ChatLogView: View {
         .padding(.horizontal)
         .padding(.vertical, 8)
     }
-}
-
-
-private struct ChatMessagesView: View {
-    var body: some View {
+    
+    private var chatMessagesView: some View {
         ScrollView {
-            ForEach(0..<20) { num in
-                HStack {
-                    Spacer()
-                    HStack {
-                        Text("FAKE MESSAGE FOR NOW")
-                            .foregroundColor(.white)
+            ForEach(vm.chatMessages) { message in
+                VStack{
+                    if message.fromId == FirebaseManager.shared.auth.currentUser?.uid {
+                        HStack {
+                            Spacer()
+                            HStack {
+                                Text(message.text)
+                                    .foregroundColor(.white)
+                            }
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(8)
+                        }
                     }
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(8)
+                    else {
+                        HStack {
+                            HStack {
+                                Text(message.text)
+                                    .foregroundColor(.black)
+                            }
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(8)
+                            Spacer()
+                        }
+                    }
                 }
                 .padding(.horizontal)
                 .padding(.top, 8)
