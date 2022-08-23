@@ -18,6 +18,9 @@ struct ChatUser: Identifiable {
         self.email = data["email"] as? String ?? ""
         self.profileImageUrl = data["profileImageUrl"] as? String ?? ""
     }
-    
+}
+
+struct Mockdata {
+    static let sampleChatUser = ChatUser(data: ["uid": "123", "email": "sampleEmail@gmail.com", "profileImageUrl": "sampleUrl"])
 }
 
