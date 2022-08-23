@@ -61,39 +61,53 @@ struct ChatLogView: View {
     
     private var chatMessagesView: some View {
         ScrollView {
-            ForEach(vm.chatMessages) { message in
-                VStack{
-                    if message.fromId == FirebaseManager.shared.auth.currentUser?.uid {
-                        HStack {
-                            Spacer()
-                            HStack {
-                                Text(message.text)
-                                    .foregroundColor(.white)
+            ScrollViewReader { scrollViewProxy in
+                VStack {
+                    ForEach(vm.chatMessages) { message in
+                        VStack{
+                            if message.fromId == FirebaseManager.shared.auth.currentUser?.uid {
+                                HStack {
+                                    Spacer()
+                                    HStack {
+                                        Text(message.text)
+                                            .foregroundColor(.white)
+                                    }
+                                    .padding()
+                                    .background(Color.blue)
+                                    .cornerRadius(8)
+                                }
                             }
-                            .padding()
-                            .background(Color.blue)
-                            .cornerRadius(8)
+                            else {
+                                HStack {
+                                    HStack {
+                                        Text(message.text)
+                                            .foregroundColor(.black)
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(8)
+                                    Spacer()
+                                }
+                            }
                         }
+                        .padding(.horizontal)
+                        .padding(.top, 8)
                     }
-                    else {
-                        HStack {
-                            HStack {
-                                Text(message.text)
-                                    .foregroundColor(.black)
-                            }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(8)
-                            Spacer()
-                        }
+                    
+                    HStack{ Spacer() }
+                        .frame(height: 50)
+                        .id("idToScrollTo")
+                    
+                }
+                //$ not before vm because the following error is shown if given: "Instance method 'onReceive(_:perform:)' requires that 'Binding<Int>' conform to 'Publisher'"
+                .onReceive(vm.$count) { _ in
+                    withAnimation(.easeOut(duration: 0.5)) {
+                        scrollViewProxy.scrollTo("idToScrollTo", anchor: .bottom)
                     }
                 }
-                .padding(.horizontal)
-                .padding(.top, 8)
             }
             
-            HStack{ Spacer() }
-                .frame(height: 50)
+            
         }
         .background(Color(.init(white: 0.95, alpha: 1)))
     }
