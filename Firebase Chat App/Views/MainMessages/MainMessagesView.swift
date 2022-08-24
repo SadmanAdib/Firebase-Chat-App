@@ -6,6 +6,28 @@
 //
 
 import SwiftUI
+import Firebase
+
+struct RecentMessage: Identifiable {
+
+    var id: String { documentId }
+
+    let documentId: String
+    let text, email: String
+    let fromId, toId: String
+    let profileImageUrl: String
+    let timestamp: Timestamp
+
+    init(documentId: String, data: [String: Any]) {
+        self.documentId = documentId
+        self.text = data["text"] as? String ?? ""
+        self.fromId = data["fromId"] as? String ?? ""
+        self.toId = data["toId"] as? String ?? ""
+        self.profileImageUrl = data["profileImageUrl"] as? String ?? ""
+        self.email = data["email"] as? String ?? ""
+        self.timestamp = data["timestamp"] as? Timestamp ?? Timestamp(date: Date())
+    }
+}
 
 struct MainMessagesView: View {
     
@@ -20,7 +42,7 @@ struct MainMessagesView: View {
 
                 VStack {
                     CustomNavBar(vm: vm, shouldShowLogOutOptions: $shouldShowLogOutOptions)
-                    MessagesView()
+                    MessagesView(vm: vm)
                     
                     NavigationLink("", isActive: $showChatLogView) {
                         ChatLogView(chatUser: chatUser)
@@ -120,29 +142,38 @@ struct CustomNavBar: View {
             LoginView(didCompleteLoginProcess: {
                 vm.isUserCurrentlyLoggedOut = false
                 vm.fetchCurrentUser()
+                vm.fetchRecentMessages()
+                vm.recentMessages.removeAll()
             })
         }
     }
 }
 
 struct MessagesView: View {
+    @ObservedObject var vm: MainMessagesViewModel
     var body: some View {
         ScrollView {
-            ForEach(0..<10, id: \.self) { num in
+            ForEach(vm.recentMessages) { recentMessage in
                 VStack {
                     HStack(spacing: 16) {
-                        Image(systemName: "person.fill")
-                            .font(.system(size: 32))
-                            .padding(8)
-                            .overlay(RoundedRectangle(cornerRadius: 44)
-                                        .stroke(Color(.label), lineWidth: 1)
-                            )
-
-
+                        AsyncImage(url: URL(string: recentMessage.profileImageUrl)) { returnedImage in
+                            returnedImage
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 60, height: 60)
+                                .clipped()
+                                .cornerRadius(60)
+                                .overlay(RoundedRectangle(cornerRadius: 60)
+                                    .stroke(Color(.label), lineWidth: 1)
+                                )
+                                .shadow(radius: 5)
+                        } placeholder: {
+                            ProgressView()
+                        }
                         VStack(alignment: .leading) {
-                            Text("Username")
+                            Text(recentMessage.email)
                                 .font(.system(size: 16, weight: .bold))
-                            Text("Message sent to user")
+                            Text(recentMessage.text)
                                 .font(.system(size: 14))
                                 .foregroundColor(Color(.lightGray))
                         }

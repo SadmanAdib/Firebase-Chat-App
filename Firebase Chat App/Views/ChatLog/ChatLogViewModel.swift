@@ -13,6 +13,7 @@ class ChatLogViewModel: ObservableObject {
     private var chatUser: ChatUser?
     @Published var chatMessages: [ChatMessage] = []
     @Published var count = 0
+    private var tempChatText = ""
     
     init(chatUser: ChatUser?) {
         self.chatUser = chatUser
@@ -33,7 +34,7 @@ class ChatLogViewModel: ObservableObject {
                 snapshot?.documentChanges.forEach{ change in
                     if change.type == .added {
                         let data = change.document.data()
-//                        let chatMessage = ChatMessage(fromId: data["fromId"] as! String, toId: data["toId"] as! String, text: data["text"] as! String)
+                        //                        let chatMessage = ChatMessage(fromId: data["fromId"] as! String, toId: data["toId"] as! String, text: data["text"] as! String)
                         let chatMessage = ChatMessage(data: data, documentId: change.document.documentID)
                         self.chatMessages.append(chatMessage)
                     }
@@ -42,7 +43,7 @@ class ChatLogViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.count += 1
                 }
-               
+                
                 
             }
         
@@ -67,6 +68,10 @@ class ChatLogViewModel: ObservableObject {
             }
             
             print("Successfully saved message from sender end")
+            
+            self.persistRecentMessage()
+            //temp variable needed as before completion of the persisRecentMessage() function, the chatText is being set to empty string. Don't know why!
+            self.tempChatText = self.chatText
             self.chatText = ""
             self.count += 1
         }
@@ -83,6 +88,61 @@ class ChatLogViewModel: ObservableObject {
             }
             
             print("Successfully saved message from reciever end")
+        }
+    }
+    
+    private func persistRecentMessage() {
+        
+        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let toId = chatUser?.uid else {return}
+        
+        let document = FirebaseManager.shared.firestore.collection("recent_messages").document(fromId).collection("messages").document(toId)
+        
+        let data = [
+            "timestamp": Timestamp(),
+            "text": self.chatText,
+            "fromId": fromId,
+            "toId": toId,
+            "profileImageUrl": chatUser?.profileImageUrl ?? "",
+            "email": chatUser?.email ?? ""
+        ] as [String : Any]
+        
+        document.setData(data) { err in
+            if let err = err {
+                print(err)
+                return
+            }
+        }
+        
+        var currentUserProfileImageUrl = ""
+        
+        FirebaseManager.shared.firestore.collection("users").document(fromId).getDocument { snapshot, err in
+            if let err = err {
+                print(err)
+            }
+            //needed to access the currentUserProfileImageUrl directly as couldn't access via currentUser.profileImageUrl
+            currentUserProfileImageUrl = snapshot?["profileImageUrl"] as? String ?? ""
+            guard let currentUser = FirebaseManager.shared.auth.currentUser else {return}
+            let recipientRecentMessageDictionary = [
+                "timestamp": Timestamp(),
+                "text": self.tempChatText,
+                "fromId": fromId,
+                "toId": toId,
+                "profileImageUrl": currentUserProfileImageUrl,
+                "email": currentUser.email ?? ""
+            ] as [String : Any]
+            
+            FirebaseManager.shared.firestore
+                .collection("recent_messages")
+                .document(toId)
+                .collection("messages")
+                .document(currentUser.uid)
+                .setData(recipientRecentMessageDictionary) { error in
+                    if let error = error {
+                        print("Failed to save recipient recent message: \(error)")
+                        return
+                    }
+                }
         }
     }
 }

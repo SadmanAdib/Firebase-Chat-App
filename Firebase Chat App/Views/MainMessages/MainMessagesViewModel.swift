@@ -12,12 +12,37 @@ class MainMessagesViewModel: ObservableObject {
     @Published private var errorMessage = ""
     @Published var chatUser: ChatUser?
     @Published var isUserCurrentlyLoggedOut = false
+    @Published var recentMessages: [RecentMessage] = []
 
     init() {
         fetchCurrentUser()
         
         DispatchQueue.main.async {
             self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
+        }
+        
+        fetchRecentMessages()
+    }
+    
+    func fetchRecentMessages() {
+        //recentMessages.removeAll()
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        
+        FirebaseManager.shared.firestore.collection("recent_messages").document(uid).collection("messages").order(by: "timestamp").addSnapshotListener { snapshot, error in
+            if let error = error {
+                print(error)
+                return
+            }
+            snapshot?.documentChanges.forEach { change in
+                let docId = change.document.documentID
+                
+                if let index = self.recentMessages.firstIndex(where: { recentMessage in
+                    return recentMessage.documentId == docId
+                }) {
+                    self.recentMessages.remove(at: index)
+                }
+                self.recentMessages.insert(.init(documentId: docId, data: change.document.data()), at: 0)
+            }
         }
     }
 

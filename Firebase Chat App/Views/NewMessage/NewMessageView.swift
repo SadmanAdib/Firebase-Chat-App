@@ -18,8 +18,7 @@ struct NewMessageView: View {
         var body: some View {
             NavigationView {
                 ScrollView {
-                    Text(vm.statusMessage)
-
+                    //Text(vm.statusMessage)
                     ForEach(vm.users) { user in
                         Button {
                             //presentationMode.wrappedValue.dismiss()
